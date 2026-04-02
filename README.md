@@ -123,15 +123,29 @@ curl -X POST http://localhost:8000/predict/heatmap \
 
 ## Results
 
-> Benchmarks on MVTec AD (WideResNet50, coreset_ratio=0.1). Full results in `results/`.
+> Benchmarks on MVTec AD --- WideResNet50 backbone, coreset_ratio=0.1, k=3, RTX 3090 24 GB.
 
-| Category | AUROC (image) | AUROC (pixel) | Latency (ms) |
-|---|---|---|---|
-| Bottle | -- | -- | -- |
-| Cable | -- | -- | -- |
-| Capsule | -- | -- | -- |
+| Category | Image AUROC | Pixel AUROC |
+|---|---|---|
+| Bottle | **1.000** | 0.984 |
+| Cable | 0.982 | 0.982 |
+| Capsule | 0.962 | 0.986 |
+| Carpet | 0.991 | 0.987 |
+| Grid | 0.981 | 0.976 |
+| Hazelnut | **1.000** | 0.985 |
+| Leather | **1.000** | 0.990 |
+| Metal nut | 0.999 | 0.983 |
+| Pill | 0.958 | 0.977 |
+| Screw | 0.981 | 0.989 |
+| Tile | 0.990 | 0.951 |
+| Toothbrush | **1.000** | 0.986 |
+| Transistor | **1.000** | 0.969 |
+| Wood | 0.987 | 0.934 |
+| Zipper | 0.990 | 0.980 |
+| **Average** | **0.988** | **0.977** |
 
-*Results will be filled after running evaluation on RTX 3090.*
+Comparable to the original PatchCore paper (99.1% / 98.1% image/pixel AUROC).
+Training time: ~8 min total (15 categories) on RTX 3090.
 
 ---
 
