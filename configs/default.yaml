@@ -1,0 +1,27 @@
+# Anomaly Detection configuration
+
+model:
+  backbone: "wide_resnet50_2"  # wide_resnet50_2 | resnet18
+  layers: ["layer2", "layer3"]
+  coreset_ratio: 0.01
+  image_size: 224
+
+dataset:
+  name: "mvtec"
+  category: "bottle"  # bottle | cable | capsule | carpet | grid | hazelnut | ...
+  data_dir: "./data/mvtec"
+
+training:
+  batch_size: 32
+  num_workers: 4
+
+inference:
+  threshold: 0.5  # anomaly score threshold
+  device: "cuda"  # cuda | cpu
+
+serve:
+  host: "0.0.0.0"
+  port: 8000
+
+demo:
+  server_port: 7860
