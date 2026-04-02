@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./cache:/app/cache
+      - ./data:/app/data
+    environment:
+      - DEVICE=cpu
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: streamlit run src/demo/app.py --server.port 7860 --server.address 0.0.0.0
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./cache:/app/cache
+      - ./data:/app/data
+    depends_on:
+      - api
+    environment:
+      - DEVICE=cpu

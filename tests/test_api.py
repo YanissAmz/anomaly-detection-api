@@ -17,3 +17,15 @@ class TestHealthEndpoint:
             "/predict", files={"file": ("test.jpg", b"not an image", "image/jpeg")}
         )
         assert response.status_code == 503
+
+    def test_heatmap_without_model(self):
+        response = client.post(
+            "/predict/heatmap", files={"file": ("test.jpg", b"not an image", "image/jpeg")}
+        )
+        assert response.status_code == 503
+
+    def test_health_shows_not_loaded(self):
+        response = client.get("/health")
+        data = response.json()
+        assert data["model_loaded"] is False
+        assert data["category"] is None

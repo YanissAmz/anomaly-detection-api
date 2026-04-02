@@ -1,4 +1,4 @@
-.PHONY: install dev lint format test serve demo clean
+.PHONY: install dev lint format test serve demo train evaluate clean
 
 install:
 	uv pip install -e .
@@ -25,7 +25,13 @@ serve:
 	uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload
 
 demo:
-	python -m src.demo.app
+	streamlit run src/demo/app.py
+
+train:
+	python scripts/train.py
+
+evaluate:
+	python scripts/evaluate.py
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +

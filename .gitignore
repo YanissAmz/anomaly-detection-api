@@ -11,11 +11,12 @@ build/
 *.pt
 *.bin
 *.safetensors
+*.npz
 checkpoints/
-models/
+/cache/
 
-# Data
-data/
+# Data (top-level only, not src/data/)
+/data/
 
 # IDE
 .vscode/

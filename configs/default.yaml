@@ -1,23 +1,39 @@
 # Anomaly Detection configuration
 
 model:
-  backbone: "wide_resnet50_2"  # wide_resnet50_2 | resnet18
+  backbone: "wide_resnet50_2"
   layers: ["layer2", "layer3"]
-  coreset_ratio: 0.01
+  coreset_ratio: 0.1        # fraction of training patches to keep
+  eps_coreset: 0.90          # SparseRandomProjection epsilon
+  k_nearest: 3               # k for K-NN scoring
   image_size: 224
+  resize: 256                # resize before center crop
+
+  # Backbone-specific image sizes (eliminates duplication from PFE)
+  backbone_image_sizes:
+    wide_resnet50_2: 224
+    RN50: 224
+    RN50x4: 288
+    RN50x16: 384
+    RN101: 224
 
 dataset:
   name: "mvtec"
-  category: "bottle"  # bottle | cable | capsule | carpet | grid | hazelnut | ...
+  category: "bottle"
   data_dir: "./data/mvtec"
+  download: true
 
 training:
-  batch_size: 32
+  batch_size: 1              # PatchCore uses batch_size=1 for feature extraction
   num_workers: 4
 
 inference:
-  threshold: 0.5  # anomaly score threshold
-  device: "cuda"  # cuda | cpu
+  threshold_percentile: 99   # percentile of training scores for threshold
+  device: "auto"             # auto | cuda | cpu
+
+cache:
+  dir: "./cache/memory_banks"
+  enabled: true
 
 serve:
   host: "0.0.0.0"
