@@ -27,7 +27,11 @@ logger = logging.getLogger(__name__)
 
 
 def _gaussian_blur(segm_map: torch.Tensor, radius: int = 4) -> torch.Tensor:
-    """Apply Gaussian blur to a segmentation map for smoother heatmaps."""
+    """Apply Gaussian blur to a segmentation map for smoother heatmaps.
+
+    Always returns a CPU tensor (segmentation maps are used for visualization).
+    """
+    segm_map = segm_map.cpu()
     max_value = segm_map.max()
     if max_value == 0:
         return segm_map
