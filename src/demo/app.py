@@ -169,5 +169,17 @@ if run_btn and st.session_state.model is not None:
             fig.add_vline(x=threshold, line_dash="dash", line_color="red")
             st.plotly_chart(fig, use_container_width=True)
 
+        # Pie chart: normal vs anomaly
+        n_anomaly = sum(1 for s in scores if s > threshold)
+        n_normal = len(scores) - n_anomaly
+        fig = px.pie(
+            values=[n_normal, n_anomaly],
+            names=["Normal", "Anomaly"],
+            title="Detection Results",
+            color_discrete_sequence=["#22c55e", "#ef4444"],
+        )
+        fig.update_layout(height=300)
+        st.plotly_chart(fig, use_container_width=True)
+
 elif run_btn:
     st.warning("Build the memory bank first.")
