@@ -57,9 +57,52 @@ CLASS_DOWNLOAD_LINKS = {
 }
 
 
+def download_mvtec_dataset(target_dir: str | Path) -> None:
+    """Download the full MVTec AD dataset from HuggingFace and extract it.
+
+    Falls back to individual class downloads from mydrive.ch if HuggingFace fails.
+    """
+    target_dir = Path(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        from huggingface_hub import hf_hub_download
+
+        logger.info("Downloading MVTec AD from HuggingFace...")
+        zip_path = hf_hub_download(
+            repo_id="hdtech/mvtech_anomaly_detection",
+            filename="mvtech_anomaly_detection.zip",
+            repo_type="dataset",
+        )
+        import shutil
+        import zipfile
+
+        logger.info("Extracting MVTec AD dataset...")
+        with zipfile.ZipFile(zip_path) as zf:
+            zf.extractall(target_dir)
+
+        # The zip may contain a nested directory — move contents up if needed
+        nested = target_dir / "mvtech_anomaly_detection"
+        if nested.is_dir():
+            for item in nested.iterdir():
+                dest = target_dir / item.name
+                if not dest.exists():
+                    shutil.move(str(item), str(dest))
+            nested.rmdir()
+
+        logger.info("MVTec AD dataset ready at '%s'", target_dir)
+    except ImportError:
+        logger.warning("huggingface_hub not installed. Install it: pip install huggingface_hub")
+        raise
+
+
 def download_mvtec_class(cls: str, target_dir: str | Path) -> None:
-    """Download and extract a single MVTec AD class."""
-    if cls not in CLASS_DOWNLOAD_LINKS:
+    """Ensure a MVTec AD class is available locally.
+
+    Downloads the full dataset from HuggingFace if the class directory
+    doesn't exist yet.
+    """
+    if cls not in MVTEC_CLASSES:
         raise ValueError(f"Unknown class '{cls}'. Available: {MVTEC_CLASSES}")
 
     target_dir = Path(target_dir)
@@ -67,18 +110,27 @@ def download_mvtec_class(cls: str, target_dir: str | Path) -> None:
         logger.info("Class '%s' already exists in '%s'", cls, target_dir)
         return
 
-    target_dir.mkdir(parents=True, exist_ok=True)
-    url = CLASS_DOWNLOAD_LINKS[cls]
-    archive_path = target_dir / f"{cls}.tar.xz"
+    # Try individual download from mydrive.ch first
+    if cls in CLASS_DOWNLOAD_LINKS:
+        try:
+            target_dir.mkdir(parents=True, exist_ok=True)
+            url = CLASS_DOWNLOAD_LINKS[cls]
+            archive_path = target_dir / f"{cls}.tar.xz"
 
-    logger.info("Downloading '%s' from MVTec AD...", cls)
-    urllib.request.urlretrieve(url, archive_path)
+            logger.info("Downloading '%s' from mydrive.ch...", cls)
+            urllib.request.urlretrieve(url, archive_path)
 
-    logger.info("Extracting '%s'...", cls)
-    with tarfile.open(archive_path) as tar:
-        tar.extractall(target_dir)
-    archive_path.unlink()
-    logger.info("Class '%s' ready.", cls)
+            logger.info("Extracting '%s'...", cls)
+            with tarfile.open(archive_path) as tar:
+                tar.extractall(target_dir)
+            archive_path.unlink()
+            logger.info("Class '%s' ready.", cls)
+            return
+        except Exception:
+            logger.warning("mydrive.ch download failed, falling back to HuggingFace...")
+
+    # Fallback: download full dataset from HuggingFace
+    download_mvtec_dataset(target_dir)
 
 
 class MVTecTrainDataset(ImageFolder):
