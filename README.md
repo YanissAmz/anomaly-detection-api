@@ -123,29 +123,36 @@ curl -X POST http://localhost:8000/predict/heatmap \
 
 ## Results
 
-> Benchmarks on MVTec AD --- WideResNet50 backbone, coreset_ratio=0.1, k=3, RTX 3090 24 GB.
+> Benchmarks on MVTec AD — WideResNet50 backbone, coreset_ratio=0.1, k=3, RTX 3090 24 GB. Numbers from a fresh end-to-end run: `python scripts/train.py --category all && python scripts/evaluate.py --category all --out results/auroc_full.json`. Raw JSON in [`results/auroc_full.json`](results/auroc_full.json).
 
-| Category | Image AUROC | Pixel AUROC |
-|---|---|---|
-| Bottle | **1.000** | 0.984 |
-| Cable | 0.982 | 0.982 |
-| Capsule | 0.962 | 0.986 |
-| Carpet | 0.991 | 0.987 |
-| Grid | 0.981 | 0.976 |
-| Hazelnut | **1.000** | 0.985 |
-| Leather | **1.000** | 0.990 |
-| Metal nut | 0.999 | 0.983 |
-| Pill | 0.958 | 0.977 |
-| Screw | 0.981 | 0.989 |
-| Tile | 0.990 | 0.951 |
-| Toothbrush | **1.000** | 0.986 |
-| Transistor | **1.000** | 0.969 |
-| Wood | 0.987 | 0.934 |
-| Zipper | 0.990 | 0.980 |
-| **Average** | **0.988** | **0.977** |
+| Category | Image AUROC | Pixel AUROC | Eval (s) |
+|---|---:|---:|---:|
+| Bottle      | **1.000** | 0.983 | 4.8 |
+| Cable       | 0.990     | 0.982 | 8.6 |
+| Capsule     | 0.972     | 0.986 | 7.5 |
+| Carpet      | 0.990     | 0.987 | 6.9 |
+| Grid        | 0.980     | 0.975 | 3.6 |
+| Hazelnut    | **1.000** | 0.985 | 7.1 |
+| Leather     | **1.000** | 0.990 | 6.9 |
+| Metal nut   | 0.997     | 0.983 | 4.9 |
+| Pill        | 0.953     | 0.977 | 8.4 |
+| Screw       | 0.978     | 0.989 | 7.8 |
+| Tile        | 0.990     | 0.951 | 5.8 |
+| Toothbrush  | **1.000** | 0.986 | 2.2 |
+| Transistor  | **1.000** | 0.970 | 5.6 |
+| Wood        | 0.989     | 0.935 | 4.7 |
+| Zipper      | 0.989     | 0.980 | 6.8 |
+| **Average** | **0.989** | **0.977** | 6.1 |
 
-Comparable to the original PatchCore paper (99.1% / 98.1% image/pixel AUROC).
-Training time: ~8 min total (15 categories) on RTX 3090.
+Within reach of the original PatchCore paper (99.1% / 98.1% image/pixel
+AUROC). Five categories saturate at 1.000 image AUROC; the remaining ten
+land 0.95–0.99. Pixel AUROC is more uniform (0.93–0.99). Wood is the
+weakest at the pixel level (0.935) — its grain pattern triggers
+false-positive heatmap response on parts of the image that are textural
+but not anomalous.
+
+Total wall-clock for the run: ~10 min training + ~1.5 min evaluation
+(15 × ~30s training, 15 × ~6s eval, RTX 3090).
 
 ---
 

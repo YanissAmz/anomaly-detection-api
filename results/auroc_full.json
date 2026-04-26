@@ -1,0 +1,90 @@
+{
+  "config": {
+    "backbone": "wide_resnet50_2",
+    "coreset_ratio": 0.1,
+    "k_nearest": 3,
+    "image_size": 224
+  },
+  "results": {
+    "bottle": {
+      "image_auroc": 1.0,
+      "pixel_auroc": 0.9834,
+      "eval_seconds": 4.82
+    },
+    "cable": {
+      "image_auroc": 0.9903,
+      "pixel_auroc": 0.9818,
+      "eval_seconds": 8.64
+    },
+    "capsule": {
+      "image_auroc": 0.9717,
+      "pixel_auroc": 0.9863,
+      "eval_seconds": 7.46
+    },
+    "carpet": {
+      "image_auroc": 0.99,
+      "pixel_auroc": 0.987,
+      "eval_seconds": 6.93
+    },
+    "grid": {
+      "image_auroc": 0.9799,
+      "pixel_auroc": 0.9749,
+      "eval_seconds": 3.63
+    },
+    "hazelnut": {
+      "image_auroc": 1.0,
+      "pixel_auroc": 0.985,
+      "eval_seconds": 7.08
+    },
+    "leather": {
+      "image_auroc": 1.0,
+      "pixel_auroc": 0.9896,
+      "eval_seconds": 6.88
+    },
+    "metal_nut": {
+      "image_auroc": 0.9971,
+      "pixel_auroc": 0.9834,
+      "eval_seconds": 4.91
+    },
+    "pill": {
+      "image_auroc": 0.9528,
+      "pixel_auroc": 0.9767,
+      "eval_seconds": 8.4
+    },
+    "screw": {
+      "image_auroc": 0.9783,
+      "pixel_auroc": 0.9895,
+      "eval_seconds": 7.85
+    },
+    "tile": {
+      "image_auroc": 0.9903,
+      "pixel_auroc": 0.9506,
+      "eval_seconds": 5.82
+    },
+    "toothbrush": {
+      "image_auroc": 1.0,
+      "pixel_auroc": 0.9862,
+      "eval_seconds": 2.22
+    },
+    "transistor": {
+      "image_auroc": 1.0,
+      "pixel_auroc": 0.9697,
+      "eval_seconds": 5.62
+    },
+    "wood": {
+      "image_auroc": 0.9886,
+      "pixel_auroc": 0.9349,
+      "eval_seconds": 4.73
+    },
+    "zipper": {
+      "image_auroc": 0.9892,
+      "pixel_auroc": 0.9797,
+      "eval_seconds": 6.76
+    }
+  },
+  "average": {
+    "image_auroc": 0.9885,
+    "pixel_auroc": 0.9772,
+    "n_categories": 15
+  }
+}
